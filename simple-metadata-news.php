@@ -1,13 +1,15 @@
 <?php
 
-/*
-Plugin Name: AIOM News Realted Content
-Plugin URI: https://github.com/my-language-skills/aiom-extensions
-Description: This plugin makes your news posts more understandable for search engines by telling wich kind of news article the given one is and adding automatically generated metadata based on post information.
-Version: 0.1
-Author: Daniil Zhitnitskii (My Language Skills)
-Author URI: https://github.com/my-language-skills
-License: GPL 3.0
+/**
+* Plugin Name: Simple News
+* Plugin URI: https://github.com/my-language-skills/aiom-extensions
+* Description: This plugin makes your news posts more understandable for search engines by telling wich kind of news article the given one is and adding automatically generated metadata based on post information.
+* Version: 1.0
+* Author: Daniil Zhitnitskii (My Language Skills)
+* Author URI: https://github.com/my-language-skills
+* License: GPL 3.0
+* Text Domain: simple-metadata-annotation
+* Domain Path: /languages
 */
 
 
@@ -20,7 +22,7 @@ function aiex_add_news_post_type_meta () {
 
 	add_meta_box (
 		'aiex_news_post_type', //Unique ID
-		'Type Of News Article', //Title
+		__('Type Of News Article', 'simple-metadata-news'), //Title
 		'aiex_render_news_post_type_meta', //Callback function
 		'post', //for pages
 		'side', //Context
@@ -34,15 +36,15 @@ function aiex_render_news_post_type_meta ($object, $box) {
 
 	$news_type = esc_attr(get_post_meta ($object->ID, 'aiex_news_post_type', true));
 	$news_types = array(
-					'NewsArticle'				=> 'General News Article',
-					'AnalysisNewsArticle' 		=> 'Analysis Article',
-					'AskPublicNewsArticle' 		=> '"Ask Public" Article',
-					'BackgroundNewsArticle' 	=> 'Background Article',
-					'ReportageNewsArticle'		=> 'Reportage Article',
-					'ReviewNewsArticle'			=> 'Review Article',
+					'NewsArticle'				=> __('General News Article', 'simple-metadata-news'),
+					'AnalysisNewsArticle' 		=> __('Analysis Article', 'simple-metadata-news'),
+					'AskPublicNewsArticle' 		=> __('"Ask Public" Article', 'simple-metadata-news'),
+					'BackgroundNewsArticle' 	=> __('Background Article', 'simple-metadata-news'),
+					'ReportageNewsArticle'		=> __('Reportage Article', 'simple-metadata-news'),
+					'ReviewNewsArticle'			=> __('Review Article', 'simple-metadata-news'),
 				  );
 	?>
-		<p>News Post Type</p>
+		<p><?php esc_html_e('News Post Type', 'simple-metadata-news'); ?></p>
 			<select style="width: 90%;" name="aiex_news_post_type" id="aiex_news_post_type">
 				<?php
 					foreach ($news_types as $key => $value) {
@@ -70,10 +72,10 @@ function aiex_save_news_post_type ($post_id, $post) {
 	$old_meta_value = get_post_meta ($post_id, 'aiex_news_post_type', true);
 
 	if ( $new_meta_value && '' == $old_meta_value ) {
-		add_post_meta( $post_id, 'aiex_news_post_type', $new_meta_value, true ); 
+		add_post_meta( $post_id, 'aiex_news_post_type', $new_meta_value, true );
 	} elseif ( $new_meta_value && $new_meta_value != $meta_value ) {
 		update_post_meta( $post_id, 'aiex_news_post_type', $new_meta_value );
-	} 
+	}
 }
 
 function aiex_print_news_post_meta_fields () {
@@ -88,7 +90,7 @@ function aiex_print_news_post_meta_fields () {
 
 		$post_id = get_the_ID();
 
-		
+
 		$post_content = get_post( $post_id )->post_content;
 		$word_count = str_word_count($post_content);
 		$categories = get_the_category( $post_id);
@@ -132,3 +134,21 @@ function aiex_print_news_post_meta_fields () {
 add_action ('add_meta_boxes', 'aiex_add_news_post_type_meta');
 add_action ('save_post', 'aiex_save_news_post_type', 10, 2);
 add_action ('wp_head', 'aiex_print_news_post_meta_fields');
+
+
+/**
+ * Internalization
+ * It loads the MO file for plugin's translation
+ *
+ * @since 1.0
+ * @author @davideC00
+ *
+ */
+	function aiex_load_plugin_textdomain() {
+    load_plugin_textdomain( 'simple-metadata-news', FALSE, basename( dirname( __FILE__ ) ) . '/languages/' );
+}
+
+/**
+ * Called when the activated plugin has been loaded
+ */
+add_action( 'plugins_loaded', 'aiex_load_plugin_textdomain' );
