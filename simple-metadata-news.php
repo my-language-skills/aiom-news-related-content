@@ -1,23 +1,39 @@
 <?php
 
 /**
-* Plugin Name: Simple News
-* Plugin URI: https://github.com/my-language-skills/aiom-extensions
-* Description: This plugin makes your news posts more understandable for search engines by telling wich kind of news article the given one is and adding automatically generated metadata based on post information.
-* Version: 1.0
-* Author: Daniil Zhitnitskii (My Language Skills)
-* Author URI: https://github.com/my-language-skills
-* License: GPL 3.0
-* Text Domain: simple-metadata-annotation
-* Domain Path: /languages
-*/
-
+ * Simple Metadata - News
+ *
+ * This file is read by WordPress to generate the plugin information in the plugin
+ * admin area. This file also includes all of the dependencies used by the plugin,
+ * registers the activation and deactivation functions, and defines a function
+ * that starts the plugin.
+ *
+ * @link              https://github.com/my-language-skills/simple-metadata-news
+ * @since             0.1
+ * @package           simple-metadata-news
+ *
+ * @wordpress-plugin
+ * Plugin Name:       Simple Metadata - News
+ * Plugin URI:        https://github.com/my-language-skills/simple-metadata-news
+ * Description:       Simple Metadata add-on for news sites. This plugin makes your news posts more understandable for search engines by telling wich kind of news article the given one is and adding automatically generated metadata based on post information.
+ * Version:           1.0
+ * Author:            My Language Skills team
+ * Author URI:        https://github.com/my-language-skills/
+ * License:           GPL 3.0
+ * License URI:       https://www.gnu.org/licenses/gpl-3.0.txt
+ * Text Domain:       simple-metadata-news
+ * Domain Path:       /languages
+ */
 
 defined ("ABSPATH") or die ("No script assholes!");
 
 /**
- *	Function for creation of metabox to pick type of news post for proper Schema.org schema type
- */
+* Function for creation of metabox to pick type of news post for proper Schema.org schema type.
+*
+* @since
+*
+*/
+
 function aiex_add_news_post_type_meta () {
 
 	add_meta_box (
@@ -29,6 +45,13 @@ function aiex_add_news_post_type_meta () {
 		'high' //priority
 	);
 }
+
+/**
+* Summary.
+*
+* @since
+*
+*/
 
 function aiex_render_news_post_type_meta ($object, $box) {
 	//creating nonce
@@ -57,15 +80,18 @@ function aiex_render_news_post_type_meta ($object, $box) {
 }
 
 /**
- * Function for post saving/updating action
- */
+* Function for post saving/updating action.
+*
+* @since
+*
+*/
+
 function aiex_save_news_post_type ($post_id, $post) {
 
 	/* Verify the nonce before proceeding. */
 	if ( !isset( $_POST['aiex_render_news_post_type_meta'] ) || !wp_verify_nonce( $_POST['aiex_render_news_post_type_meta'], basename( __FILE__ ) ) ){
 		return $post_id;
 	}
-
 
 	//fetching old and new meta values if they exist
 	$new_meta_value = isset($_POST['aiex_news_post_type']) ? sanitize_text_field ($_POST['aiex_news_post_type']) : '';
@@ -77,6 +103,13 @@ function aiex_save_news_post_type ($post_id, $post) {
 		update_post_meta( $post_id, 'aiex_news_post_type', $new_meta_value );
 	}
 }
+
+/**
+* Summary.
+*
+* @since
+*
+*/
 
 function aiex_print_news_post_meta_fields () {
 
@@ -137,13 +170,13 @@ add_action ('wp_head', 'aiex_print_news_post_meta_fields');
 
 
 /**
- * Internalization
- * It loads the MO file for plugin's translation
+ * Internalization.
+ * It loads the MO file for plugin's translation.
  *
  * @since 1.0
- * @author @davideC00
  *
  */
+
 	function aiex_load_plugin_textdomain() {
     load_plugin_textdomain( 'simple-metadata-news', FALSE, basename( dirname( __FILE__ ) ) . '/languages/' );
 }
