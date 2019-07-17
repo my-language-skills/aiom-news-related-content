@@ -8,6 +8,7 @@ Stable tag: 1.3
 Requires PHP: 5.6
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
+Gutenberg: compatible
 
 This plugin enhance [Simple metadata](https://github.com/my-language-skills/simple-metadata) with news related metadata.
 
